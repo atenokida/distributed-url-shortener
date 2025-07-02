@@ -1,0 +1,121 @@
+openapi: 3.0.4
+info:
+  title: URL Shortener API
+  description: |-
+    A __URL Shortener API__ permite que você crie uma versão curta e única de sua URL favorita.
+    
+    <br>
+    
+    ## Confira as principais _features_ 🛠️
+    
+     - Encurtar uma nova URL;
+     - Resolver uma URL encurtada.
+     
+     <br>
+     
+     ## Roadmap ⌛
+     
+      - Obter estatísticas de uma URL encurtada.
+      
+    <hr>
+     
+    
+    _A especificação dessa API é baseada na OpenAPI Specification 3.0_.
+    
+  contact:
+    email: alexandretolomeotti@alunos.utfpr.edu.br
+  version: 1.0.0
+  
+tags:
+  - name: url
+    description: Encurte suas URLs
+
+paths:
+  /url:
+    post:
+      tags:
+        - url
+      summary: Cria uma nova URL encurtada
+      description: Recebe uma URL longa e retorna a versão encurtada.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: A URL que será encurtada.
+                  example: "https://www.google.com/search?q=sistemas+operacionais"
+                alias:
+                  type: string
+                  description: (Opcional) Apelido para o link encurtado.
+                  # talvez adicionar uma expressão regular para especificar kebab-case(?)
+                  example: "busca-so"
+              required:
+                - url
+      responses:
+        '200':
+          description: A URL encurtada para esta `url` já existe. A URL existente está sendo retornada.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  long_url:
+                    type: string
+                    format: uri
+                    example: "https://www.google.com/search?q=sistemas+operacionais"
+                  short_url:
+                    type: string
+                    format: uri
+                    example: "http://url-shortener.com/abc123"
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2025-06-10T00:00:00Z"
+        '201':
+          description: URL encurtada criada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    format: uri
+                    example: "https://www.google.com/search?q=sistemas+operacionais"
+                  short_url:
+                    type: string
+                    format: uri
+                    example: "https://url-shortener.com/abc123"
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2025-06-12T00:00:00Z"
+        '400':
+          description: Requisição inválida. A URL fornecida é inválida.
+        '409':
+          description: Conflito. O alias solicitado já está em uso.
+
+  /{short_url}:
+    get:
+      tags:
+        - url
+      summary: Redireciona para a URL original
+      description: Acessado diretamente por um navegador, retorna um redirecionamento HTTP.
+      parameters:
+        - name: short_url
+          in: path
+          required: true
+          description: O código único da URL encurtada.
+          schema:
+            type: string
+          example: abc123
+      responses:
+        '301':
+          description: Redirecionamento Permanente.
+        '404':
+          description: Recurso não encontrado. O código da URL encurtada não existe.
