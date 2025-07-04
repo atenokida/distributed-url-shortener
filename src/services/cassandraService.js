@@ -45,6 +45,9 @@ export async function addUrl(shortCode, longUrl) {
     // **Consistency defines the Write Consistency Policy.
     // Since this is a learning project, we arbitrarily define the CONSISTENCY LEVEL to be 'QUORUM'.
     // For short, a QUORUM is the number of nodes to be written.
+    // Note that these are two distinct definitions:
+    //   - QUORUM: The number of nodes to be written.
+    //   - QUORUM (CONSISTENCY LEVEL): A Write Consistency Policy.
     // See more at:
       // - https://docs.datastax.com/en/cassandra-oss/3.0/cassandra/dml/dmlConfigConsistency.html
     return client.execute(query, params, { prepare: true, consistency: cassandra.types.consistencies.quorum });
