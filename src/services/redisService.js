@@ -24,10 +24,17 @@ export async function connect() {
   }
 }
 
+/**
+ * @param shortCode The unique compact identifier for the URL.
+ */
 export async function getUrl(shortCode) {
   return client.get(shortCode);
 }
 
+/**
+ * @param shortCode The unique compact identifier for the URL.
+ * @param longUrl The original URL.
+ */
 export async function setUrl(shortCode, longUrl) {
   // EX seconds -- Set the specified expire time, in seconds (a positive integer).
   // See more at: https://redis.io/docs/latest/commands/set
