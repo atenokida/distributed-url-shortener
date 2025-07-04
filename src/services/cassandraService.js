@@ -30,11 +30,12 @@ export async function connect() {
 /**
  * @param shortCode The unique compact identifier for the URL.
  * @param longUrl The original URL.
+ * @param alias An optional alias for the URL.
  */
-export async function addUrl(shortCode, longUrl) {
+export async function addUrl(shortCode, longUrl, alias = null) {
   try {
-    const query = 'INSERT INTO urls (short_code, long_url, created_at) VALUES (?, ?, toTimestamp(now()))';
-    const params = [shortCode, longUrl];
+    const query = 'INSERT INTO urls (short_code, alias, long_url, created_at, access_count) VALUES (?, ?, ?, toTimestamp(now()), 0)';
+    const params = [shortCode, alias || '', longUrl];
     
     // **Prepare is a statement to tell Cassandra to parse the query string, cache the result and return a unique identifier for it.
     // It is ideal for queries that run multiple times with different parameters.
