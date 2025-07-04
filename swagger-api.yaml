@@ -97,8 +97,8 @@ paths:
                     example: "2025-06-12T00:00:00Z"
         '400':
           description: Requisição inválida. A URL fornecida é inválida.
-        '409':
-          description: Conflito. O alias solicitado já está em uso.
+        # '409':
+        #   description: Conflito. O alias solicitado já está em uso.
 
   /{short_url}:
     get:
