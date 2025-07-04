@@ -72,3 +72,45 @@ export async function getUrlByShortCode(shortCode) {
     throw err;
   }
 }
+
+/**
+ * @param shortCode The unique compact identifier for the URL.
+ * @param count The value to increment the access count by.
+ */
+export async function incrementAccessCount(shortCode, count) {
+  try {
+    const query = 'UPDATE urls SET access_count = ? WHERE short_code = ?';
+    await client.execute(query, [count, shortCode], { prepare: true, consistency: cassandra.types.consistencies.quorum });
+
+  } catch (err) {
+    console.error(`ERRO ao incrementar contagem de acessos: ${err}`);
+    throw err;
+  }
+}
+
+/**
+ * Increments the access count for the given short code.
+ * Note that increment operations are not supported for non counter
+ * column types in CassandraDB. In this case, the naive solution is to
+ * read the current value, increment it, and write it back.
+ * @param shortCode The unique compact identifier for the URL.
+ */
+export async function getAccessCountAndIncrement(shortCode) {
+  try {
+    let query = 'SELECT access_count FROM urls WHERE short_code = ?';
+    const result = await client.execute(query, [shortCode], { prepare: true, consistency: cassandra.types.consistencies.quorum });
+
+    // `toNumber()` is necessary for Big Int values in Cassandra.
+    const newAccessCount = result.rows[0].access_count.toNumber() + 1;
+
+    query = 'UPDATE urls SET access_count = ? WHERE short_code = ?';
+    await client.execute(query, 
+      [newAccessCount, shortCode], 
+      { prepare: true, consistency: cassandra.types.consistencies.quorum }
+    );
+    
+  } catch (err) {
+    console.error(`ERRO ao obter contagem de acessos: ${err}`);
+    throw err;
+  }
+}
