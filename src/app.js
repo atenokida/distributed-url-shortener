@@ -13,7 +13,7 @@ import YAML from 'yamljs';
 import * as swaggerUi from 'swagger-ui-express';
 
 import * as config from './config/index.js';
-import apiRoutes from './routes/url.js';
+import {apiRoutes} from './routes/url.js';
 
 import * as cassandra from './services/cassandraService.js';
 /*--------------- END OF SECTION --------------*/
