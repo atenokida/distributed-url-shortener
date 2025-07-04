@@ -64,7 +64,7 @@ export async function addUrl(shortCode, longUrl, alias = null) {
  */
 export async function getUrlByShortCode(shortCode) {
   try {
-    const query = 'SELECT long_url, created_at FROM urls WHERE short_code = ?';
+    const query = 'SELECT short_code, alias, long_url, created_at, access_count FROM urls WHERE short_code = ?';
     const result = await client.execute(query, [shortCode], { prepare: true, consistency: cassandra.types.consistencies.quorum });
     
     return result.rows[0];
