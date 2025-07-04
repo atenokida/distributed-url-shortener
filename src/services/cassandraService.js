@@ -22,7 +22,7 @@ export async function connect() {
     await client.connect();
     console.log('Conectado ao cluster do Cassandra.');
   } catch (err) {
-    console.error(`ERRO ao conectar com o Cassandra: ${err}`);
+    console.error(`ERRO ao conectar com Cassandra: ${err}`);
     process.exit(1);
   }
 }
