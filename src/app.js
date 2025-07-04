@@ -15,8 +15,8 @@ import * as swaggerUi from 'swagger-ui-express';
 import * as config from './config/index.js';
 import {apiRoutes} from './routes/url.js';
 
-import * as cassandra from './services/cassandraService.js';
-import * as redis from './services/redisService.js';
+import * as cassandraService from './services/cassandraService.js';
+import * as redisService from './services/redisService.js';
 /*--------------- END OF SECTION --------------*/
 
 const app = express();
@@ -38,8 +38,8 @@ const startServer = async () => {
     // Try to connect before exposing the application.
     // Note that the server will fail to start
     // if the connection doesn't succeed.
-    await cassandra.connect();
-    await redis.connect();
+    await cassandraService.connect();
+    await redisService.connect();
 
     app.listen(config.server.port, () => {
       console.log(`Servidor disponível por meio da porta ${config.server.port}`);
