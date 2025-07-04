@@ -4,7 +4,7 @@
  * @createdOn   : 24/june/2025
  * @brief       : Entry point for the server.
  * @description : This file initializes the Express application, 
- *                sets up middleware and routes, connects to the database, and starts the server.
+ *                sets up middleware and routes, connects to the databases, and starts the server.
  *=============================================**/
 
 /*--------------- IMPORTS ---------------------*/
@@ -16,6 +16,7 @@ import * as config from './config/index.js';
 import {apiRoutes} from './routes/url.js';
 
 import * as cassandra from './services/cassandraService.js';
+import * as redis from './services/redisService.js';
 /*--------------- END OF SECTION --------------*/
 
 const app = express();
@@ -38,6 +39,7 @@ const startServer = async () => {
     // Note that the server will fail to start
     // if the connection doesn't succeed.
     await cassandra.connect();
+    await redis.connect();
 
     app.listen(config.server.port, () => {
       console.log(`Servidor disponível por meio da porta ${config.server.port}`);
